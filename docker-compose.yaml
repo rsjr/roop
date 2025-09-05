@@ -1,0 +1,57 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://roop:roop_password@db:5432/roop_marine_ops
+      - LOG_LEVEL=INFO
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+    networks:
+      - roop-network
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=roop
+      - POSTGRES_PASSWORD=roop_password
+      - POSTGRES_DB=roop_marine_ops
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U roop -d roop_marine_ops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - roop-network
+
+  # Development database GUI (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@roop.dev
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - roop-network
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+
+networks:
+  roop-network:
+    driver: bridge

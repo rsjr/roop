@@ -29,7 +29,6 @@ class Settings(BaseSettings):
         description="PostgreSQL database URL",
         examples=["postgresql://user:pass@localhost:5432/dbname"],
     )
-
     # Security
     secret_key: str = Field(
         description="Secret key for JWT token generation",
@@ -45,18 +44,18 @@ class Settings(BaseSettings):
         default="https://api.weather.example.com",
         description="Base URL for external weather API",
     )
-    weather_api_key: str = Field(
-        default="", description="API key for weather service"
-    )
+    weather_api_key: str = Field(default="", description="API key for weather service")
 
     # Logging
     log_level: str = Field(default="INFO", description="Logging level")
     log_format: str = Field(default="json", description="Log format (json/text)")
 
     # Application
-    app_name: str = Field(default="Roop Marine Operations", description="Application name")
+    app_name: str = Field(
+        default="Roop Marine Operations", description="Application name"
+    )
     app_description: str = Field(
-        default="Marine Operations Feasibility Service for roop",
+        default="Marine Operations Feasibility Service for Entail",
         description="Application description",
     )
 
@@ -75,10 +74,12 @@ class Settings(BaseSettings):
     @property
     def database_url_async(self) -> str:
         """Get async database URL for SQLAlchemy."""
-        return str(self.database_url).replace("postgresql://", "postgresql+asyncpg://", 1)
+        return str(self.database_url).replace(
+            "postgresql://", "postgresql+asyncpg://", 1
+        )
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """Get cached application settings."""
     return Settings()

@@ -21,6 +21,8 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "python-dateutil>=2.8.2",
     "structlog>=23.2.0",
+    "psycopg2-binary>=2.9.10",
+    "greenlet>=3.2.4",
 ]
 
 [project.optional-dependencies]
@@ -34,11 +36,12 @@ dev = [
     "pre-commit>=3.5.0",
     "types-python-dateutil>=2.8.19",
     "types-passlib>=1.7.7",
+    "hatchling>=1.18.0",
 ]
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 target-version = "py313"
@@ -53,7 +56,6 @@ select = [
     "UP",  # pyupgrade
     "ARG", # flake8-unused-arguments
     "SIM", # flake8-simplify
-    "TCH", # flake8-type-checking
     "TID", # flake8-tidy-imports
     "Q",   # flake8-quotes
     "PL",  # pylint
@@ -130,6 +132,21 @@ exclude_lines = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/app",
+    "/tests",
+    "/README.md",
+    "/pyproject.toml",
+]
+exclude = [
+    "/sql",
+    "/data", 
+    "/docs",
+    "/.env*",
+    "/alembic",
+]
 
 [tool.hatch.version]
 path = "app/__init__.py"

@@ -89,5 +89,4 @@ logs/
 .python-version
 
 # Alembic
-alembic/versions/*.py
 !alembic/versions/__init__.py

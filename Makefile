@@ -17,10 +17,10 @@ help:
 	@echo "  migrate      - Run database migrations"
 
 install:
-	uv sync --frozen
+	uv sync 
 
 dev-install:
-	uv sync --frozen --all-extras
+	uv sync 
 
 lint:
 	uv run ruff check .

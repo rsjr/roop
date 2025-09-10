@@ -59,7 +59,7 @@ class Settings(BaseSettings):
         description="Application description",
     )
 
-    @field_validator("database_url", pre=True)
+    @field_validator("database_url")
     def validate_database_url(cls, v: Any) -> str:
         """Validate database URL format."""
         if isinstance(v, str):

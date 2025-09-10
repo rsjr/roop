@@ -1,0 +1,585 @@
+{
+  "info": {
+    "name": "Marine Operations API",
+    "description": "Postman collection for Roop Marine Operations Service - offshore operations task management, weather forecasting, and WoW analysis",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string",
+      "description": "Base URL for the Marine Operations API"
+    },
+    {
+      "key": "lat",
+      "value": "61.5",
+      "type": "string",
+      "description": "Default latitude for testing"
+    },
+    {
+      "key": "lon",
+      "value": "4.8",
+      "type": "string",
+      "description": "Default longitude for testing"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Info",
+      "item": [
+        {
+          "name": "Root - Service Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Get basic service information and status"
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the service is healthy and running"
+          },
+          "response": []
+        }
+      ],
+      "description": "Basic service health and information endpoints"
+    },
+    {
+      "name": "Task Management",
+      "item": [
+        {
+          "name": "Create Single Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tasks\": [\n    {\n      \"name\": \"Site Preparation\",\n      \"wave_height_limit\": 2.5,\n      \"duration_hours\": 2.0\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Create a single task without dependencies"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tasks with Dependencies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tasks\": [\n    {\n      \"name\": \"Site Preparation\",\n      \"wave_height_limit\": 3.0,\n      \"duration_hours\": 2.0\n    },\n    {\n      \"name\": \"Cable Installation\",\n      \"wave_height_limit\": 2.0,\n      \"duration_hours\": 4.0,\n      \"predecessor_id\": 1\n    },\n    {\n      \"name\": \"Testing & Commissioning\",\n      \"wave_height_limit\": 1.5,\n      \"duration_hours\": 3.0,\n      \"predecessor_id\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Create multiple tasks with predecessor dependencies"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Tasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Retrieve all tasks with their current status and dependencies"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Task",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "1"]
+            },
+            "description": "Get details for a specific task by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Task",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/1/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "1", "complete"]
+            },
+            "description": "Mark a task as completed - this will unblock dependent tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Start Task",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/2/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "2", "start"]
+            },
+            "description": "Mark a ready task as in progress"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Schedule Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedule/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedule", "status"]
+            },
+            "description": "Get overall schedule status with task counts and progress"
+          },
+          "response": []
+        }
+      ],
+      "description": "Task creation, management, and status tracking endpoints"
+    },
+    {
+      "name": "Weather Forecasting",
+      "item": [
+        {
+          "name": "Get 12-Hour Forecast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/weather/12h?lat={{lat}}&lon={{lon}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["weather", "12h"],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                }
+              ]
+            },
+            "description": "Get weather forecast for the next 12 hours at specified coordinates"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Custom Time Range Forecast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/weather?lat={{lat}}&lon={{lon}}&from_time=2025-08-20T12:00:00Z&to_time=2025-08-20T18:00:00Z",
+              "host": ["{{baseUrl}}"],
+              "path": ["weather"],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon", 
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                },
+                {
+                  "key": "from_time",
+                  "value": "2025-08-20T12:00:00Z",
+                  "description": "Start time in ISO format (optional)"
+                },
+                {
+                  "key": "to_time",
+                  "value": "2025-08-20T18:00:00Z",
+                  "description": "End time in ISO format (optional)"
+                }
+              ]
+            },
+            "description": "Get weather forecast for a custom time range"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Weather (no time range)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/weather?lat={{lat}}&lon={{lon}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["weather"],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                }
+              ]
+            },
+            "description": "Get weather forecast without specifying time range (uses default)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Weather forecasting endpoints for marine operations"
+    },
+    {
+      "name": "WoW Analysis",
+      "item": [
+        {
+          "name": "Analyze Weather Window - 12h",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wow/analyze?task_id=1&lat={{lat}}&lon={{lon}}&forecast_hours=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["wow", "analyze"],
+              "query": [
+                {
+                  "key": "task_id",
+                  "value": "1",
+                  "description": "ID of the task to analyze"
+                },
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                },
+                {
+                  "key": "forecast_hours",
+                  "value": "12",
+                  "description": "Number of hours to analyze (1-168)"
+                }
+              ]
+            },
+            "description": "Perform Wait on Weather analysis for a task over 12 hours"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Weather Window - 24h",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wow/analyze?task_id=2&lat={{lat}}&lon={{lon}}&forecast_hours=24",
+              "host": ["{{baseUrl}}"],
+              "path": ["wow", "analyze"],
+              "query": [
+                {
+                  "key": "task_id",
+                  "value": "2",
+                  "description": "ID of the task to analyze"
+                },
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                },
+                {
+                  "key": "forecast_hours",
+                  "value": "24",
+                  "description": "Number of hours to analyze (1-168)"
+                }
+              ]
+            },
+            "description": "Perform Wait on Weather analysis for a task over 24 hours"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Weather Window - Extended",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wow/analyze?task_id=3&lat={{lat}}&lon={{lon}}&forecast_hours=72",
+              "host": ["{{baseUrl}}"],
+              "path": ["wow", "analyze"],
+              "query": [
+                {
+                  "key": "task_id",
+                  "value": "3",
+                  "description": "ID of the task to analyze"
+                },
+                {
+                  "key": "lat",
+                  "value": "{{lat}}",
+                  "description": "Latitude (-90 to 90)"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}",
+                  "description": "Longitude (-180 to 180)"
+                },
+                {
+                  "key": "forecast_hours",
+                  "value": "72",
+                  "description": "Number of hours to analyze (1-168)"
+                }
+              ]
+            },
+            "description": "Perform Wait on Weather analysis for a task over 72 hours (3 days)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Wait on Weather (WoW) analysis endpoints for determining operational windows"
+    },
+    {
+      "name": "Complete Workflow Tests",
+      "item": [
+        {
+          "name": "1. Create Tasks Chain",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tasks\": [\n    {\n      \"name\": \"Vessel Positioning\",\n      \"wave_height_limit\": 3.0,\n      \"duration_hours\": 1.0\n    },\n    {\n      \"name\": \"Cable Deployment\",\n      \"wave_height_limit\": 2.0,\n      \"duration_hours\": 4.0,\n      \"predecessor_id\": 1\n    },\n    {\n      \"name\": \"Connection & Testing\",\n      \"wave_height_limit\": 1.5,\n      \"duration_hours\": 2.0,\n      \"predecessor_id\": 2\n    },\n    {\n      \"name\": \"System Commissioning\",\n      \"wave_height_limit\": 2.5,\n      \"duration_hours\": 3.0,\n      \"predecessor_id\": 3\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Step 1: Create a chain of dependent tasks for a complete workflow test"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Check Initial Schedule",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedule/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedule", "status"]
+            },
+            "description": "Step 2: Check initial schedule status (should show first task ready, others blocked)"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Analyze First Task",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wow/analyze?task_id=1&lat={{lat}}&lon={{lon}}&forecast_hours=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["wow", "analyze"],
+              "query": [
+                {
+                  "key": "task_id",
+                  "value": "1"
+                },
+                {
+                  "key": "lat",
+                  "value": "{{lat}}"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}"
+                },
+                {
+                  "key": "forecast_hours",
+                  "value": "12"
+                }
+              ]
+            },
+            "description": "Step 3: Analyze weather conditions for the first ready task"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Complete First Task",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/1/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "1", "complete"]
+            },
+            "description": "Step 4: Complete the first task (should unblock the second task)"
+          },
+          "response": []
+        },
+        {
+          "name": "5. Check Updated Schedule",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedule/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedule", "status"]
+            },
+            "description": "Step 5: Check updated schedule (second task should now be ready)"
+          },
+          "response": []
+        },
+        {
+          "name": "6. Start Second Task",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/2/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "2", "start"]
+            },
+            "description": "Step 6: Start the second task (mark as in progress)"
+          },
+          "response": []
+        },
+        {
+          "name": "7. Analyze Second Task",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wow/analyze?task_id=2&lat={{lat}}&lon={{lon}}&forecast_hours=24",
+              "host": ["{{baseUrl}}"],
+              "path": ["wow", "analyze"],
+              "query": [
+                {
+                  "key": "task_id",
+                  "value": "2"
+                },
+                {
+                  "key": "lat",
+                  "value": "{{lat}}"
+                },
+                {
+                  "key": "lon",
+                  "value": "{{lon}}"
+                },
+                {
+                  "key": "forecast_hours",
+                  "value": "24"
+                }
+              ]
+            },
+            "description": "Step 7: Analyze weather for the second task (now in progress)"
+          },
+          "response": []
+        },
+        {
+          "name": "8. Get Final Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Step 8: Get final task status to see the complete workflow state"
+          },
+          "response": []
+        }
+      ],
+      "description": "Complete end-to-end workflow tests demonstrating task dependencies, status changes, and WoW analysis"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set dynamic variables if needed",
+          "// pm.environment.set('timestamp', new Date().toISOString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Basic response validation",
+          "pm.test('Status code is 200 or 201', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has correct content type', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});"
+        ]
+      }
+    }
+  ]
+}

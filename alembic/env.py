@@ -1,13 +1,13 @@
 """Alembic environment configuration."""
 
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import create_engine, pool
 
 from alembic import context
 
-# Import your models and config
-from app.config import settings
+# Import your models
 from app.database import Base
 
 # this is the Alembic Config object
@@ -23,8 +23,16 @@ target_metadata = Base.metadata
 
 def get_url():
     """Get database URL for migrations."""
-    # Use simple postgresql URL for sync migrations
-    return str(settings.database_url)
+    # Get URL from environment and ensure it's sync
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable is required")
+
+    # Ensure it's a sync URL (remove any async drivers)
+    if "asyncpg" in database_url:
+        database_url = database_url.replace("postgresql+asyncpg://", "postgresql://")
+
+    return database_url
 
 
 def run_migrations_offline() -> None:
@@ -52,10 +60,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

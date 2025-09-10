@@ -12,7 +12,7 @@ I would explore the approach of having a async queue + worker architecture, spli
 
 The async queue (probably with a persistence layer) will orchestrate the API module and the worker module in a producer/consumer approach.
 
-ADD DIAGRAM HERE HERE
+![High level diagram](async_worker.png)
 
 This architecture has the following advantages:
 * Remove the single point of failure, as API and worker will be deployed in different container (pods)
@@ -20,7 +20,7 @@ This architecture has the following advantages:
 * Flexiblity when scaling (heavy usage on worker side vs heavy usage on API side vs both)
 * In a scenario where you are depending on a external system (such as a weather API), you dettach the inflight requests coming to the API to our calls to the external service. In a nutshell: you don't keep the user "hanging" because the service is stuck in I/O to an external third party system
 * Full async between frotnend and worker. The API will give the end user a requestId, and the user is responsible for polling the API until the result is done. This makes the experience fluid in the frontend without long waiting times.
-* You can even implement a batch worker, scheduled based. 
+* You can even implement a batch worker, scheduled based (if needed)
 
 ## How would you implement notifications, e.g. notify relevant users when a task is completed?
 We might need to introduce an event based architecturem depending on constraints, but I would probably rely on AWS SNS for this. Kafka or other more robust solutions are also valid, but I would use cloud resources which are already proven to work nicely (obviosly, taking into account the cost of using "out-of-the-box" solutions)

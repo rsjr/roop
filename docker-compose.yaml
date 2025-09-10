@@ -4,8 +4,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Database configuration
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-roop}:${POSTGRES_PASSWORD:-roop_password}@db:5432/${POSTGRES_DB:-roop_marine_ops}
+      # Database configuration - using standard postgresql:// URL
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-roop}:${POSTGRES_PASSWORD:-roop_password}@db:5432/${POSTGRES_DB:-roop_marine_ops}
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - POSTGRES_USER=${POSTGRES_USER:-roop}
@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-roop_marine_ops}
       
       # Application configuration
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - DEBUG=${DEBUG:-false}
       - PYTHONPATH=/app
@@ -28,9 +28,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER:-roop}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-roop_password}
+      - POSTGRES_DB=${POSTGRES_DB:-roop_marine_ops}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

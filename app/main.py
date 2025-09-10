@@ -1,5 +1,3 @@
-"""Marine Operations FastAPI application with SQLAlchemy."""
-
 from datetime import datetime
 
 from fastapi import Depends, FastAPI, HTTPException, Query
@@ -11,53 +9,20 @@ from app.database import get_db
 from app.models.task import Task, TaskStatus
 from app.schemas.task import TaskResponse, TasksCreateRequest, TasksCreateResponse
 from app.schemas.weather import WeatherForecast
+from app.services.task import task_service
 from app.services.weather import weather_service
 from app.services.wow import wow_service
 
-# Create FastAPI app
 app = FastAPI(
     title=settings.app_name,
     version="0.1.0",
     debug=settings.debug,
 )
 
-
-@app.get("/")
-async def root():
-    """Root endpoint."""
-    return {
-        "message": "Marine Operations Service",
-        "status": "running",
-        "version": "0.1.0",
-    }
-
-
-@app.get("/health")
-async def health():
-    """Health check."""
-    return {"status": "healthy"}
-
-
 # =============================================================================
 # TASK ENDPOINTS
 # =============================================================================
 
-
-@app.post("/tasks", response_model=TasksCreateResponse)
-async def create_tasks(request: TasksCreateRequest, db: AsyncSession = Depends(get_db)):
-    """Create one or more tasks."""
-    created_tasks = []
-
-
-"""Marine Operations FastAPI application with SQLAlchemy."""
-
-from fastapi import Depends, FastAPI
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.config import settings
-from app.database import get_db
-from app.schemas.task import TasksCreateRequest, TasksCreateResponse
-from app.services.task import task_service
 
 # Create FastAPI app
 app = FastAPI(

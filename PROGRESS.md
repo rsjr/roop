@@ -6,11 +6,11 @@ cat > PROGRESS.md << EOF
 - ✅ PostgreSQL database setup
 - ✅ Pydantic schemas for tasks, weather, WoW analysis
 - ✅ Hatchling build system fixed
+- ✅ API routes implementation (Step 4)
+- ✅ Business logic services (WoW analysis)
 
 ## Next Steps:
-- 🔄 API routes implementation (Step 4)
-- 🔄 Business logic services (WoW analysis)
-- 🔄 Sample data loading
+
 - 🔄 Tests
 
 ## Commands:

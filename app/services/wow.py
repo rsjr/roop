@@ -1,6 +1,6 @@
 """Wait on Weather (WoW) analysis service."""
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from app.models.task import Task
 from app.services.weather import weather_service
@@ -77,7 +77,7 @@ class WoWAnalysisService:
                 "task_name": task.name,
                 "can_proceed": False,
                 "recommendation": "No weather data available",
-                "analysis_time": datetime.utcnow().isoformat(),
+                "analysis_time": datetime.now(UTC).isoformat(),
                 "forecast_data_points": 0,
                 "operational_windows": [],
             }

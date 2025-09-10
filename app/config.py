@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Any
 
-from pydantic import Field, PostgresDsn, validator
+from pydantic import Field, PostgresDsn, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -59,7 +59,7 @@ class Settings(BaseSettings):
         description="Application description",
     )
 
-    @validator("database_url", pre=True)
+    @field_validator("database_url", pre=True)
     def validate_database_url(cls, v: Any) -> str:
         """Validate database URL format."""
         if isinstance(v, str):

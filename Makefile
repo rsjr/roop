@@ -72,3 +72,12 @@ setup: dev-install
 	cp .env.example .env
 	uv run pre-commit install
 	@echo "Setup complete! Please update .env with your configuration."
+
+docker-migrate:
+	docker compose run --rm migrations
+
+docker-shell:
+	docker compose exec api bash
+
+docker-test:
+	docker compose run --rm api uv run pytest

@@ -7,7 +7,9 @@ from app.schemas.weather import Location, WeatherDataPoint, WeatherForecast
 
 
 class WeatherService:
-    """Simple weather service that loads JSON data."""
+    """Simple weather service that loads JSON data.
+    This won't look like this in a prod setup, here it's just reading from the json file.
+    """
 
     def __init__(self):
         """Load weather data from JSON file."""

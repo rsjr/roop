@@ -19,6 +19,15 @@ app = FastAPI(
     debug=settings.debug,
 )
 
+
+"""
+This is convoluted, in a real prod scenario, I wouldn't mix routes and db access like this.
+Usually I would do:
+routes > repository (where orm models are) > schemas (Pydantic)
+
+But for the sake of simplicity (and lack of time), I kept all here.
+"""
+
 # =============================================================================
 # TASK ENDPOINTS
 # =============================================================================

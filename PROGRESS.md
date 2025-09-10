@@ -1,17 +1,19 @@
-cat > PROGRESS.md << EOF
 # Project Status
 
 ## What's Working:
 - ✅ Basic FastAPI app structure
 - ✅ PostgreSQL database setup
 - ✅ Pydantic schemas for tasks, weather, WoW analysis
-- ✅ Hatchling build system fixed
 - ✅ API routes implementation (Step 4)
 - ✅ Business logic services (WoW analysis)
+- ✅ Tests
 
 ## Next Steps:
+- Docker Compose etc
+- Full E2E run
+- README
+- Service Architecture Diagram
 
-- 🔄 Tests
 
 ## Commands:
 - Database: docker compose up -d
